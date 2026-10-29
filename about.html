@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+{% load static humanize %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="user-authenticated" content="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+  <title>About Us - Dinesh Tour & Travel</title>
+  <meta name="description"
+    content="Learn about Dinesh Tour & Travel, our founder Dinesh Sharma, our leadership team, company stats, and mission to deliver luxury travel memories.">
+  <link rel="icon" type="image/png" href="{% static 'assests/favicon.png' %}?v=3">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-logo" href="{% url 'app:index' %}">
+        <img src="{% static 'assests/logo.png' %}?v=3" alt="Dinesh Tour & Travel Logo" class="brand-logo-img">
+        <span>Dinesh <span class="brand-accent">Tour & Travel</span></span>
+      </a>
+      <button class="navbar-toggler navbar-dark border-0" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:tour' %}">Tours & Packages</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'app:about' %}">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:contact' %}">Contact Us</a></li>
+        </ul>
+        <div id="navbar-auth-container">
+          {% if user.is_authenticated %}
+          <div class="dropdown d-flex align-items-center gap-2">
+            <button
+              class="btn btn-warning text-dark font-heading fw-bold px-3 py-2 dropdown-toggle d-flex align-items-center gap-2 rounded-pill shadow-sm"
+              type="button" id="myAccountDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+              style="background: linear-gradient(135deg, #f39c12, #f1c40f); border: none; color: #111;">
+              <span
+                class="nav-user-avatar bg-dark text-warning rounded-circle d-inline-flex align-items-center justify-content-center"
+                style="width:26px; height:26px; font-size:13px; font-weight:bold;">{{ user.username|slice:":1"|upper
+                }}</span>
+              <span>My Account</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-lg border-0 mt-2 p-2"
+              aria-labelledby="myAccountDropdown" style="min-width: 250px;">
+              <li class="px-3 py-2 border-bottom bg-light rounded-top mb-2">
+                <div class="fw-bold text-midnight-navy">{{ user.get_full_name|default:user.username }}</div>
+                <div class="small text-muted">{{ user.email }}</div>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-user-circle me-2 text-ocean-teal"></i> My Account Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-suitcase me-2 text-ocean-teal"></i> My Travel Bookings
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-heart me-2 text-ocean-teal"></i> Saved Wishlist Tours
+                </a>
+              </li>
+              <li>
+                <hr class="dropdown-divider my-2">
+              </li>
+              <li class="px-2 py-1">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <a class="btn btn-warning text-dark btn-sm font-heading fw-bold w-50 py-2 text-center rounded-3 shadow-sm"
+                    href="{% url 'app:login' %}" style="background: #e6b800; border: none; color: #000;">
+                    <i class="fas fa-sign-in-alt me-1"></i> Log In
+                  </a>
+                  <a class="btn btn-warning text-dark btn-sm font-heading fw-bold w-50 py-2 text-center rounded-pill shadow-sm"
+                    href="{% url 'app:signup' %}"
+                    style="background: linear-gradient(135deg, #f1c40f, #e67e22); border: none; color: #000;">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                  </a>
+                </div>
+                <a class="btn btn-danger text-white btn-sm font-heading fw-bold w-100 py-2 text-center rounded-3 shadow-sm"
+                  href="{% url 'app:logout' %}">
+                  <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                </a>
+              </li>
+            </ul>
+
+          </div>
+          {% else %}
+          <div class="dropdown">
+            <button
+              class="btn btn-warning text-dark font-heading fw-bold px-3 py-2 dropdown-toggle d-flex align-items-center gap-2 rounded-pill shadow-sm"
+              type="button" id="myAccountGuestDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+              style="background: linear-gradient(135deg, #f39c12, #f1c40f); border: none; color: #111;">
+              <i class="fas fa-user-circle fs-5"></i>
+              <span>My Account</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-lg border-0 mt-2 p-3"
+              aria-labelledby="myAccountGuestDropdown" style="min-width: 240px;">
+              <li class="text-center mb-2">
+                <span class="small text-muted fw-bold"><i class="fas fa-shield-alt text-warning me-1"></i> Traveler
+                  Account</span>
+              </li>
+              <li class="mb-2">
+                <a class="btn btn-warning text-dark font-heading fw-bold w-100 py-2 d-flex align-items-center justify-content-center gap-1 rounded-3 shadow-sm"
+                  href="{% url 'app:login' %}" style="background: #e6b800; border: none; color: #000;">
+                  <i class="fas fa-sign-in-alt"></i> Log In
+                </a>
+              </li>
+              <li>
+                <a class="btn btn-warning text-dark font-heading fw-bold w-100 py-2 rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-1"
+                  href="{% url 'app:signup' %}"
+                  style="background: linear-gradient(135deg, #f1c40f, #e67e22); border: none; color: #000;">
+                  <i class="fas fa-user-plus"></i> Register
+                </a>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Django Messages Alert Banner -->
+  {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+      <i class="fas fa-info-circle me-2"></i>{{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Inner Header Banner -->
+  <section class="py-5 text-center text-white position-relative"
+    style="background: linear-gradient(135deg, var(--midnight-navy), var(--deep-ocean)); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;">
+    <div class="container py-4">
+      <h1 class="display-4 fw-bold font-heading mb-2 text-white">About Dinesh Tour & Travel</h1>
+      <p class="lead mb-0 text-aqua">12+ Years Of Crafting Unforgettable Holiday Memories Worldwide</p>
+    </div>
+  </section>
+
+  <!-- Main Agency Story -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="position-relative overflow-hidden rounded-4 shadow-lg" style="height: 440px;">
+            <div id="aboutWelcomeCarousel" class="carousel slide carousel-fade welcome-carousel h-100"
+              data-bs-ride="carousel" data-bs-interval="3000">
+              <div class="carousel-inner h-100">
+                <div class="carousel-item active h-100">
+                  <img src="{% static 'assests/welcome_1.jpg' %}"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';"
+                    class="d-block w-100 h-100 object-fit-cover" alt="Welcome Tour 1">
+                </div>
+                <div class="carousel-item h-100">
+                  <img src="{% static 'assests/welcome_2.jpg' %}"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80';"
+                    class="d-block w-100 h-100 object-fit-cover" alt="Welcome Tour 2">
+                </div>
+                <div class="carousel-item h-100">
+                  <img src="{% static 'assests/welcome_3.jpg' %}"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=800&q=80';"
+                    class="d-block w-100 h-100 object-fit-cover" alt="Welcome Tour 3">
+                </div>
+                <div class="carousel-item h-100">
+                  <img src="{% static 'assests/welcome_4.jpg' %}"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80';"
+                    class="d-block w-100 h-100 object-fit-cover" alt="Welcome Tour 4">
+                </div>
+              </div>
+            </div>
+            <!-- Floating Gold Overlay Badge -->
+            <div class="position-absolute bottom-0 start-0 p-3 p-sm-4 rounded-4 shadow-lg m-3 welcome-floating-badge">
+              <div class="d-flex align-items-center gap-3">
+                <div class="badge-icon-wrap rounded-circle p-2 px-3 d-flex align-items-center justify-content-center"
+                  style="background: rgba(217, 188, 122, 0.18); border: 1px solid rgba(217, 188, 122, 0.45);">
+                  <i class="fas fa-award text-champagne fa-2x"></i>
+                </div>
+                <div>
+                  <h3 class="fw-bold mb-0 text-champagne" style="font-size: 1.5rem; letter-spacing: -0.3px;">12+ Years
+                  </h3>
+                  <p class="small mb-0 text-light opacity-90">Of Excellence In Tourism</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <span class="section-subtitle">Our Founding Vision</span>
+          <h2 class="section-title">Crafting Premium Travel Journeys Since 2014</h2>
+          <p class="text-muted mb-3">Started in New Delhi by travel visionary <strong>Dinesh Sharma</strong>, Dinesh
+            Tour & Travel grew from a boutique travel desk into one of Northern India's most trusted travel management
+            agencies.</p>
+          <p class="text-muted mb-4">We believe every journey should be filled with luxury, comfort, authentic cultural
+            discoveries, and zero booking friction. Whether you're traveling solo, planning a romantic honeymoon, or
+            taking your entire family on vacation, we handcraft custom itineraries catered to your desires.</p>
+
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-3 p-3 bg-white border rounded-3">
+                <i class="fas fa-user-check text-ocean-teal fa-2x"></i>
+                <div>
+                  <h6 class="fw-bold mb-0">Certified Guides</h6>
+                  <small class="text-muted">Expert local knowledge</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-3 p-3 bg-white border rounded-3">
+                <i class="fas fa-headset text-ocean-teal fa-2x"></i>
+                <div>
+                  <h6 class="fw-bold mb-0">24/7 Helpline</h6>
+                  <small class="text-muted">Always by your side</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Banner -->
+  <section class="section-padding bg-white">
+    <div class="container">
+      <div class="stats-banner">
+        <div class="row g-4">
+          <div class="col-md-3 col-6 stat-item">
+            <div class="stat-number">{{ stats.travelers|intcomma }}+</div>
+            <div class="stat-label">Happy Travelers</div>
+          </div>
+          <div class="col-md-3 col-6 stat-item">
+            <div class="stat-number">{{ stats.tours|intcomma }}800+</div>
+            <div class="stat-label">Completed Tours</div>
+          </div>
+          <div class="col-md-3 col-6 stat-item">
+            <div class="stat-number">{{ stats.destinations|intcomma }}+</div>
+            <div class="stat-label">Worldwide Destinations</div>
+          </div>
+          <div class="col-md-3 col-6 stat-item">
+            <div class="stat-number">{{ stats.rating }}4.9 / 5</div>
+            <div class="stat-label">Average Client Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder & Leadership Team -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="text-center mb-5">
+        <span class="section-subtitle">Meet Our Experts</span>
+        <h2 class="section-title">Leadership & Travel Consultants</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">The dedicated passion behind Dinesh Tour & Travel's 12+
+          years of hospitality and excellence.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Founder -->
+        <div class="col-lg-3 col-md-6">
+          <div class="team-card text-center p-4">
+            <img src="{% static 'assests/dinesh.jpg' %}" alt="Dinesh Sharma" class="rounded-circle mx-auto mb-3 shadow"
+              style="width: 130px; height: 130px; object-fit: cover; object-position: center 15%; border: 4px solid var(--champagne-gold);">
+            <h5 class="fw-bold mb-1 font-heading text-midnight-navy">Dinesh Sharma</h5>
+            <span class="text-ocean-teal fw-semibold small d-block mb-2">Founder & Managing Director</span>
+            <p class="text-muted small">15+ years in international tourism and hospitality management.</p>
+          </div>
+        </div>
+
+        <!-- Co-Founder & Operations Head -->
+        <div class="col-lg-3 col-md-6">
+          <div class="team-card text-center p-4">
+            <img src="{% static 'assests/sunita.jpg' %}" alt="Sunita Sharma" class="rounded-circle mx-auto mb-3 shadow"
+              style="width: 130px; height: 130px; object-fit: cover; object-position: center 15%; border: 4px solid var(--ocean-teal);">
+            <h5 class="fw-bold mb-1 font-heading text-midnight-navy">Sunita Sharma</h5>
+            <span class="text-ocean-teal fw-semibold small d-block mb-2">Co-Founder & Operations Head</span>
+            <p class="text-muted small">Oversees luxury resort partnerships & guest experience quality.</p>
+          </div>
+        </div>
+
+        <!-- Senior Domestic Tour Specialist -->
+        <div class="col-lg-3 col-md-6">
+          <div class="team-card text-center p-4">
+            <img src="{% static 'assests/amit.jpg' %}" alt="Amit Verma" class="rounded-circle mx-auto mb-3 shadow"
+              style="width: 130px; height: 130px; object-fit: cover; object-position: center 15%; border: 4px solid var(--champagne-gold);">
+            <h5 class="fw-bold mb-1 font-heading text-midnight-navy">Amit Verma</h5>
+            <span class="text-ocean-teal fw-semibold small d-block mb-2">Domestic Tour Specialist</span>
+            <p class="text-muted small">Himalayas, Kerala backwaters, & Rajasthan safari expert.</p>
+          </div>
+        </div>
+
+        <!-- International Package Lead -->
+        <div class="col-lg-3 col-md-6">
+          <div class="team-card text-center p-4">
+            <img src="{% static 'assests/priya.jpg' %}" alt="Priya Nair" class="rounded-circle mx-auto mb-3 shadow"
+              style="width: 130px; height: 130px; object-fit: cover; object-position: center 15%; border: 4px solid var(--ocean-teal);">
+            <h5 class="fw-bold mb-1 font-heading text-midnight-navy">Priya Nair</h5>
+            <span class="text-ocean-teal fw-semibold small d-block mb-2">International Package Lead</span>
+            <p class="text-muted small">Europe, Dubai & Southeast Asia custom package curator.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="big-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <a href="{% url 'app:index' %}" class="footer-brand-title">
+            <img src="{% static 'assests/logo.png' %}?v=3" alt="Dinesh Tour & Travel Logo" class="footer-logo-img">
+            <span>Dinesh <span class="text-aqua">Travel</span></span>
+          </a>
+          <p class="footer-desc">
+            Dinesh Tour & Travel is India's premier travel agency delivering tailor-made vacation packages, honeymoon
+            specials, flight bookings, luxury cabs, and hotel reservations across the globe.
+          </p>
+          <div class="social-links-list mb-3">
+            <a href="#" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <h5 class="footer-widget-title">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="{% url 'app:index' %}"><i class="fas fa-chevron-right text-aqua"></i> Home</a></li>
+            <li><a href="{% url 'app:tour' %}"><i class="fas fa-chevron-right text-aqua"></i> All Tour Packages</a></li>
+            <li><a href="{% url 'app:about' %}"><i class="fas fa-chevron-right text-aqua"></i> About Our Agency</a></li>
+            <li><a href="{% url 'app:contact' %}"><i class="fas fa-chevron-right text-aqua"></i> Contact & Help</a></li>
+            <li><a href="{% url 'app:login' %}"><i class="fas fa-chevron-right text-aqua"></i> User Login</a></li>
+            <li><a href="{% url 'app:signup' %}"><i class="fas fa-chevron-right text-aqua"></i> Register Account</a>
+            </li>
+            <li><a href="{% url 'app:profile' %}"><i class="fas fa-chevron-right text-aqua"></i> My Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-widget-title">Top Packages</h5>
+          <ul class="footer-links">
+            <li><a href="{% url 'app:tour' %}?search=Manali"><i class="fas fa-map-marker-alt text-aqua"></i> Manali &
+                Himachal Escapes</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Goa"><i class="fas fa-map-marker-alt text-aqua"></i> Goa Sun &
+                Beach Tour</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Kerala"><i class="fas fa-map-marker-alt text-aqua"></i> Kerala
+                Backwaters Houseboat</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Rajasthan"><i class="fas fa-map-marker-alt text-aqua"></i>
+                Rajasthan Heritage & Safari</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Kashmir"><i class="fas fa-map-marker-alt text-aqua"></i> Srinagar &
+                Gulmarg Snow Tour</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Bali"><i class="fas fa-map-marker-alt text-aqua"></i> Bali Tropical
+                Honeymoon</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-widget-title">Get In Touch</h5>
+          <div class="footer-contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Head Office: 102 Luxury Towers, Connaught Place, New Delhi - 110001</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>Helpline: +91 98765 43210</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>Email: info@dineshtravel.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div>
+          © 2026 <strong>Dinesh Tour & Travel</strong>. All Rights Reserved. Every journey is special. Thank you for
+          letting us be part of yours &#128150;.
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+          <span class="text-muted small">We Accept:</span>
+          <i class="fab fa-cc-visa fa-lg text-white"></i>
+          <i class="fab fa-cc-mastercard fa-lg text-white"></i>
+          <i class="fab fa-google-pay fa-lg text-white"></i>
+          <i class="fas fa-qrcode fa-lg text-white" title="UPI Payment"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tour Booking Modal -->
+  <div class="modal fade" id="tourBookingModal" tabindex="-1" aria-labelledby="tourBookingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 text-white p-4" style="background: var(--midnight-navy);">
+          <div>
+            <h4 class="modal-title font-heading mb-1 text-white" id="tourBookingModalLabel">Book Your Tour Package</h4>
+            <p class="small text-light mb-0" id="modal-tour-location"><i class="fas fa-map-marker-alt me-1"></i> Location</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-4 mb-4 align-items-center">
+            <div class="col-md-4">
+              <img id="modal-tour-img" src="" class="img-fluid rounded-3 shadow-sm" alt="Tour Preview">
+            </div>
+            <div class="col-md-8">
+              <h5 id="modal-tour-title" class="fw-bold mb-2 text-midnight-navy">Tour Title</h5>
+              <p class="text-muted small mb-2"><i class="far fa-clock text-ocean-teal me-1"></i> Duration: <strong id="modal-tour-duration">--</strong></p>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">Package Unit Price:</span>
+                <span id="modal-tour-price" class="fs-4 fw-bold text-champagne">₹0</span>
+                <span class="text-muted small">/ per traveler</span>
+              </div>
+            </div>
+          </div>
+
+          <form method="POST" action="{% url 'app:book_tour' %}" id="tour-booking-form">
+            {% csrf_token %}
+            <input type="hidden" id="modal-tour-id-input" name="tour_id">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Your Full Name</label>
+                <input type="text" id="modal-user-name" name="user_name" class="form-control" required placeholder="Enter full name" value="{{ user.get_full_name|default:user.username }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Email Address</label>
+                <input type="email" id="modal-user-email" class="form-control bg-light" required placeholder="name@example.com" value="{{ user.email|default:'' }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input type="tel" id="modal-user-phone" name="user_phone" class="form-control" required placeholder="+91 9876543210" value="{{ user.profile.phone|default:'' }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Travel Departure Date</label>
+                <input type="date" id="modal-travel-date" name="travel_date" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Number of Travelers</label>
+                <input type="number" id="modal-passengers-input" name="passengers" class="form-control" value="1" min="1" max="20" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Total Estimated Amount</label>
+                <div class="p-2 bg-light border rounded text-center font-heading fw-bold fs-4 text-champagne"
+                  id="modal-total-price-display">
+                  ₹0
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-0 pb-0 mt-4 d-flex flex-column align-items-stretch">
+              <div class="d-flex justify-content-end gap-2 w-100">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-brand px-4 py-2"><i class="fas fa-check-circle me-1"></i> Confirm & Book Package</button>
+                {% else %}
+                <a href="{% url 'app:login' %}" class="btn btn-brand px-4 py-2" id="modal-login-btn"><i class="fas fa-sign-in-alt me-1"></i> Login to Book</a>
+                {% endif %}
+              </div>
+              <small class="text-muted text-center mt-2">By booking, you agree to our <a href="#" data-bs-toggle="modal"
+                  data-bs-target="#privacyPolicyModal" class="text-ocean-teal text-decoration-underline">Privacy Policy & Terms</a>.</small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

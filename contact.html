@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="user-authenticated" content="{% if user.is_authenticated %}true{% else %}false{% endif %}">
+  <title>Contact Us - Dinesh Tour & Travel</title>
+  <meta name="description"
+    content="Get in touch with Dinesh Tour & Travel. Send us a message, find our office locations, or call our 24/7 travel helpline.">
+  <link rel="icon" type="image/png" href="{% static 'assests/favicon.png' %}?v=3">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+  <!-- 1. Navigation Bar (Unified Header) -->
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-logo" href="{% url 'app:index' %}">
+        <img src="{% static 'assests/logo.png' %}?v=3" alt="Dinesh Tour & Travel Logo" class="brand-logo-img">
+        <span>Dinesh <span class="brand-accent">Tour & Travel</span></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:index' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:tour' %}">Tours & Packages</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'app:about' %}">About Us</a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'app:contact' %}">Contact Us</a></li>
+        </ul>
+        <div id="navbar-auth-container">
+          {% if user.is_authenticated %}
+          <div class="dropdown d-flex align-items-center gap-2">
+            <button class="btn btn-warning text-dark font-heading fw-bold px-3 py-2 dropdown-toggle d-flex align-items-center gap-2 rounded-pill shadow-sm" type="button" id="myAccountDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: linear-gradient(135deg, #f39c12, #f1c40f); border: none; color: #111;">
+              <span class="nav-user-avatar bg-dark text-warning rounded-circle d-inline-flex align-items-center justify-content-center" style="width:26px; height:26px; font-size:13px; font-weight:bold;">{{ user.username|slice:":1"|upper }}</span>
+              <span>My Account</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-lg border-0 mt-2 p-2" aria-labelledby="myAccountDropdown" style="min-width: 250px;">
+              <li class="px-3 py-2 border-bottom bg-light rounded-top mb-2">
+                <div class="fw-bold text-midnight-navy">{{ user.get_full_name|default:user.username }}</div>
+                <div class="small text-muted">{{ user.email }}</div>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-user-circle me-2 text-ocean-teal"></i> My Account Profile
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-suitcase me-2 text-ocean-teal"></i> My Travel Bookings
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 fw-semibold rounded" href="{% url 'app:profile' %}">
+                  <i class="fas fa-heart me-2 text-ocean-teal"></i> Saved Wishlist Tours
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-2"></li>
+              <li class="px-2 py-1">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <a class="btn btn-warning text-dark btn-sm font-heading fw-bold w-50 py-2 text-center rounded-3 shadow-sm" href="{% url 'app:login' %}" style="background: #e6b800; border: none; color: #000;">
+                    <i class="fas fa-sign-in-alt me-1"></i> Log In
+                  </a>
+                  <a class="btn btn-warning text-dark btn-sm font-heading fw-bold w-50 py-2 text-center rounded-pill shadow-sm" href="{% url 'app:signup' %}" style="background: linear-gradient(135deg, #f1c40f, #e67e22); border: none; color: #000;">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                  </a>
+                </div>
+                <a class="btn btn-danger text-white btn-sm font-heading fw-bold w-100 py-2 text-center rounded-3 shadow-sm" href="{% url 'app:logout' %}">
+                  <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                </a>
+              </li>
+            </ul>
+
+          </div>
+          {% else %}
+          <div class="dropdown">
+            <button class="btn btn-warning text-dark font-heading fw-bold px-3 py-2 dropdown-toggle d-flex align-items-center gap-2 rounded-pill shadow-sm" type="button" id="myAccountGuestDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: linear-gradient(135deg, #f39c12, #f1c40f); border: none; color: #111;">
+              <i class="fas fa-user-circle fs-5"></i>
+              <span>My Account</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-lg border-0 mt-2 p-3" aria-labelledby="myAccountGuestDropdown" style="min-width: 240px;">
+              <li class="text-center mb-2">
+                <span class="small text-muted fw-bold"><i class="fas fa-shield-alt text-warning me-1"></i> Traveler Account</span>
+              </li>
+              <li class="mb-2">
+                <a class="btn btn-warning text-dark font-heading fw-bold w-100 py-2 d-flex align-items-center justify-content-center gap-1 rounded-3 shadow-sm" href="{% url 'app:login' %}" style="background: #e6b800; border: none; color: #000;">
+                  <i class="fas fa-sign-in-alt"></i> Log In
+                </a>
+              </li>
+              <li>
+                <a class="btn btn-warning text-dark font-heading fw-bold w-100 py-2 rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-1" href="{% url 'app:signup' %}" style="background: linear-gradient(135deg, #f1c40f, #e67e22); border: none; color: #000;">
+                  <i class="fas fa-user-plus"></i> Register
+                </a>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 2. Hero Section (Page Header Banner) -->
+  <section class="page-header-banner">
+    <div class="container text-center">
+      <h1 class="page-header-title">Get In Touch With Us</h1>
+      <p class="text-white-50 fs-5 mt-2 mb-0">We are available 24/7 to plan your dream vacation and assist with your inquiries.</p>
+    </div>
+  </section>
+
+  <!-- Main Contact Workspace -->
+  <section class="section-padding">
+    <div class="container">
+
+      <!-- Django Messages Alert Banner -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="fas fa-info-circle me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- 3. Contact Info Cards Grid -->
+      <div class="row g-4 mb-5">
+        <!-- Card 1: Head Office -->
+        <div class="col-lg-3 col-sm-6">
+          <div class="feature-box text-center h-100">
+            <div class="feature-icon mx-auto mb-3"><i class="fas fa-map-marker-alt"></i></div>
+            <h5 class="fw-bold mb-2 text-midnight-navy">Head Office</h5>
+            <p class="text-muted small mb-0">102 Luxury Towers, Connaught Place, New Delhi - 110001, India</p>
+          </div>
+        </div>
+
+        <!-- Card 2: 24/7 Helpline -->
+        <div class="col-lg-3 col-sm-6">
+          <div class="feature-box text-center h-100">
+            <div class="feature-icon mx-auto mb-3"><i class="fas fa-phone-alt"></i></div>
+            <h5 class="fw-bold mb-2 text-midnight-navy">24/7 Helpline</h5>
+            <p class="text-muted small mb-2">+91 98765 43210<br>+91 11 2345 6789</p>
+            <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill"><i
+                class="fab fa-whatsapp me-1"></i> WhatsApp Instant Support</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Email Queries -->
+        <div class="col-lg-3 col-sm-6">
+          <div class="feature-box text-center h-100">
+            <div class="feature-icon mx-auto mb-3"><i class="fas fa-envelope"></i></div>
+            <h5 class="fw-bold mb-2 text-midnight-navy">Email Support</h5>
+            <p class="text-muted small mb-0">info@dineshtravel.com<br>support@dineshtravel.com</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Working Hours -->
+        <div class="col-lg-3 col-sm-6">
+          <div class="feature-box text-center h-100">
+            <div class="feature-icon mx-auto mb-3"><i class="fas fa-clock"></i></div>
+            <h5 class="fw-bold mb-2 text-midnight-navy">Office Hours</h5>
+            <p class="text-muted small mb-0">Monday - Saturday:<br>9:00 AM - 8:00 PM IST<br><span
+                class="text-ocean-teal fw-bold">Online Support: 24/7</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Contact Form & 5. Interactive Map Grid -->
+      <div class="row g-5 align-items-stretch">
+
+        <!-- Contact Form Card -->
+        <div class="col-lg-6">
+          <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border h-100">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge bg-ocean-teal text-white px-3 py-2 rounded-pill font-heading"><i
+                  class="fas fa-paper-plane me-1"></i> Send A Message</span>
+            </div>
+            <h3 class="fw-bold mb-2">Request A Call Back</h3>
+            <p class="text-muted small mb-4">Have questions about customized tours, hotel preferences, or group booking
+              discounts? Send us a message and our travel planners will call you back shortly.</p>
+
+            <form method="POST" action="{% url 'app:contact' %}" id="contact-form">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Your Full Name</label>
+                  <input type="text" id="contact-name" name="name" class="form-control" placeholder="Enter full name" value="{{ user.get_full_name|default:'' }}" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Email Address</label>
+                  <input type="email" id="contact-email" name="email" class="form-control" placeholder="name@example.com" value="{{ user.email|default:'' }}" required>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label fw-semibold">Subject / Package Inquiry</label>
+                  <input type="text" id="contact-subject" name="subject" class="form-control"
+                    placeholder="e.g. Manali Honeymoon Package" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Your Message / Travel Preferences</label>
+                  <textarea id="contact-message" name="message" class="form-control" rows="4"
+                    placeholder="Tell us your travel dates, budget, passenger count, and hotel preferences..."
+                    required></textarea>
+                </div>
+                <div class="col-12 mt-4">
+                  <button type="submit" class="btn btn-brand w-100 py-3 font-heading fw-bold fs-6">
+                    <i class="fas fa-paper-plane me-2"></i> Submit Travel Inquiry
+                  </button>
+                  <small class="text-muted d-block text-center mt-3">By submitting, you agree to our <a href="#"
+                      data-bs-toggle="modal" data-bs-target="#privacyPolicyModal"
+                      class="text-ocean-teal text-decoration-underline">Privacy Policy & Terms</a>.</small>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- 5. Interactive Map & Branch Locations -->
+        <div class="col-lg-6">
+          <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm border h-100 d-flex flex-column">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="badge bg-midnight-navy text-white px-3 py-2 rounded-pill font-heading"><i
+                  class="fas fa-map-marked-alt me-1"></i> Head Office Location</span>
+            </div>
+            <h3 class="fw-bold mb-2">Visit Our Headquarters</h3>
+            <p class="text-muted small mb-4">Walk into our main Delhi head office for face-to-face holiday planning,
+              instant flight tickets, and customized itinerary consultations.</p>
+
+            <div class="ratio ratio-16x9 rounded-4 overflow-hidden mb-3 border shadow-sm position-relative">
+              <iframe
+                src="https://maps.google.com/maps?q=Connaught%20Place%2C%20New%20Delhi&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                class="border-0 w-100 h-100" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="Dinesh Tour & Travel Head Office Map"></iframe>
+            </div>
+            <div class="mb-4">
+              <a href="https://maps.google.com/?q=Connaught+Place,+New+Delhi" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-brand w-100">
+                <i class="fas fa-directions me-1"></i> Open Directions in Google Maps
+              </a>
+            </div>
+
+            <div class="mt-auto">
+              <h6 class="fw-bold mb-2 text-midnight-navy">Our Regional Presence Across India:</h6>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> New Delhi (HQ)</span>
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> Mumbai</span>
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> Jaipur</span>
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> Manali</span>
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> Goa</span>
+                <span class="badge bg-light text-dark border p-2"><i class="fas fa-building text-ocean-teal me-1"></i> Srinagar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Big Footer (Unified Midnight Navy Theme) -->
+  <footer class="big-footer">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Col 1: Brand Info -->
+        <div class="col-lg-4 col-md-6">
+          <a href="{% url 'app:index' %}" class="footer-brand-title">
+            <img src="{% static 'assests/logo.png' %}?v=3" alt="Dinesh Tour & Travel Logo" class="footer-logo-img">
+            <span>Dinesh <span class="text-aqua">Travel</span></span>
+          </a>
+          <p class="footer-desc">
+            Dinesh Tour & Travel is India's premier travel agency delivering tailor-made vacation packages, honeymoon
+            specials, flight bookings, luxury cabs, and hotel reservations across the globe.
+          </p>
+          <div class="social-links-list mb-3">
+            <a href="#" class="social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-btn" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="col-lg-2 col-md-6">
+          <h5 class="footer-widget-title">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="{% url 'app:index' %}"><i class="fas fa-chevron-right text-info"></i> Home</a></li>
+            <li><a href="{% url 'app:tour' %}"><i class="fas fa-chevron-right text-info"></i> All Tour Packages</a></li>
+            <li><a href="{% url 'app:about' %}"><i class="fas fa-chevron-right text-info"></i> About Our Agency</a></li>
+            <li><a href="{% url 'app:contact' %}"><i class="fas fa-chevron-right text-info"></i> Contact & Help</a></li>
+            <li><a href="{% url 'app:login' %}"><i class="fas fa-chevron-right text-info"></i> User Login</a></li>
+            <li><a href="{% url 'app:signup' %}"><i class="fas fa-chevron-right text-info"></i> Register Account</a></li>
+            <li><a href="{% url 'app:profile' %}"><i class="fas fa-chevron-right text-info"></i> My Dashboard</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Popular Destinations -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-widget-title">Top Packages</h5>
+          <ul class="footer-links">
+            <li><a href="{% url 'app:tour' %}?search=Manali"><i class="fas fa-map-marker-alt text-info"></i> Manali & Himachal Escapes</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Goa"><i class="fas fa-map-marker-alt text-info"></i> Goa Sun & Beach Tour</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Kerala"><i class="fas fa-map-marker-alt text-info"></i> Kerala Backwaters Houseboat</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Rajasthan"><i class="fas fa-map-marker-alt text-info"></i> Rajasthan Heritage & Safari</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Kashmir"><i class="fas fa-map-marker-alt text-info"></i> Srinagar & Gulmarg Snow Tour</a></li>
+            <li><a href="{% url 'app:tour' %}?search=Bali"><i class="fas fa-map-marker-alt text-info"></i> Bali Tropical Honeymoon</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Contact & Newsletter -->
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-widget-title">Get In Touch</h5>
+          <div class="footer-contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Head Office: 102 Luxury Towers, Connaught Place, New Delhi - 110001</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fas fa-phone-alt"></i>
+            <span>Helpline: +91 98765 43210</span>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fas fa-envelope"></i>
+            <span>Email: info@dineshtravel.com</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div>
+          © 2026 <strong>Dinesh Tour & Travel</strong>. All Rights Reserved. Every journey is special. Thank you for
+          letting us be part of yours &#128150;.
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+          <span class="text-muted small">We Accept:</span>
+          <i class="fab fa-cc-visa fa-lg text-white"></i>
+          <i class="fab fa-cc-mastercard fa-lg text-white"></i>
+          <i class="fab fa-google-pay fa-lg text-white"></i>
+          <i class="fas fa-qrcode fa-lg text-white" title="UPI Payment"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tour Booking Modal -->
+  <div class="modal fade" id="tourBookingModal" tabindex="-1" aria-labelledby="tourBookingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 text-white p-4" style="background: var(--midnight-navy);">
+          <div>
+            <h4 class="modal-title font-heading mb-1 text-white" id="tourBookingModalLabel">Book Your Tour Package</h4>
+            <p class="small text-light mb-0" id="modal-tour-location"><i class="fas fa-map-marker-alt me-1"></i> Location</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-4 mb-4 align-items-center">
+            <div class="col-md-4">
+              <img id="modal-tour-img" src="" class="img-fluid rounded-3 shadow-sm" alt="Tour Preview">
+            </div>
+            <div class="col-md-8">
+              <h5 id="modal-tour-title" class="fw-bold mb-2 text-midnight-navy">Tour Title</h5>
+              <p class="text-muted small mb-2"><i class="far fa-clock text-ocean-teal me-1"></i> Duration: <strong id="modal-tour-duration">--</strong></p>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small">Package Unit Price:</span>
+                <span id="modal-tour-price" class="fs-4 fw-bold text-champagne">₹0</span>
+                <span class="text-muted small">/ per traveler</span>
+              </div>
+            </div>
+          </div>
+
+          <form method="POST" action="{% url 'app:book_tour' %}" id="tour-booking-form">
+            {% csrf_token %}
+            <input type="hidden" id="modal-tour-id-input" name="tour_id">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Your Full Name</label>
+                <input type="text" id="modal-user-name" name="user_name" class="form-control" required placeholder="Enter full name" value="{{ user.get_full_name|default:user.username }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Email Address</label>
+                <input type="email" id="modal-user-email" class="form-control bg-light" required placeholder="name@example.com" value="{{ user.email|default:'' }}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone Number</label>
+                <input type="tel" id="modal-user-phone" name="user_phone" class="form-control" required placeholder="+91 9876543210" value="{{ user.profile.phone|default:'' }}">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Travel Departure Date</label>
+                <input type="date" id="modal-travel-date" name="travel_date" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Number of Travelers</label>
+                <input type="number" id="modal-passengers-input" name="passengers" class="form-control" value="1" min="1" max="20" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Total Estimated Amount</label>
+                <div class="p-2 bg-light border rounded text-center font-heading fw-bold fs-4 text-champagne"
+                  id="modal-total-price-display">
+                  ₹0
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer border-0 px-0 pb-0 mt-4 d-flex flex-column align-items-stretch">
+              <div class="d-flex justify-content-end gap-2 w-100">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-brand px-4 py-2"><i class="fas fa-check-circle me-1"></i> Confirm & Book Package</button>
+                {% else %}
+                <a href="{% url 'app:login' %}" class="btn btn-brand px-4 py-2" id="modal-login-btn"><i class="fas fa-sign-in-alt me-1"></i> Login to Book</a>
+                {% endif %}
+              </div>
+              <small class="text-muted text-center mt-2">By booking, you agree to our <a href="#" data-bs-toggle="modal"
+                  data-bs-target="#privacyPolicyModal" class="text-ocean-teal text-decoration-underline">Privacy Policy & Terms</a>.</small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Privacy Policy Modal -->
+  <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 pb-0">
+          <h4 class="modal-title fw-bold" id="privacyPolicyModalLabel">
+            <i class="fas fa-user-shield text-ocean-teal me-2"></i> Privacy Policy & Terms of Service
+          </h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-muted fs-6">
+          <p class="mb-3">At <strong>Dinesh Tour & Travel</strong>, we prioritize the confidentiality and protection of
+            your personal information. This Privacy Policy outlines how your data is collected, protected, and utilized
+            when booking vacation packages or contacting our travel consultants.</p>
+
+          <h5 class="fw-bold text-midnight-navy mt-4 mb-2"><i class="fas fa-database text-ocean-teal me-2"></i> 1.
+            Information Collection & Usage</h5>
+          <p>We collect essential information required to process your tour reservations, including your full name,
+            email address, contact phone number, travel dates, and passenger counts. Your personal information is
+            strictly used for booking flight tickets, hotel rooms, luxury cab transfers, and tour permits.</p>
+
+          <h5 class="fw-bold text-midnight-navy mt-4 mb-2"><i class="fas fa-lock text-ocean-teal me-2"></i> 2. Data
+            Protection & Security</h5>
+          <p>Your personal data is encrypted and securely stored. We never sell, rent, or trade your personal
+            information to third-party marketing companies. Data is shared exclusively with certified travel partners
+            (airlines, hotels, local guides) necessary to execute your booked itinerary.</p>
+
+          <h5 class="fw-bold text-midnight-navy mt-4 mb-2"><i class="fas fa-undo text-ocean-teal me-2"></i> 3.
+            Cancellation & Refund Policy</h5>
+          <p>Cancellations made 15+ days prior to departure qualify for a 100% full refund. Partial refunds (50%) apply
+            for cancellations between 7 to 14 days before departure date. Rescheduling is allowed free of cost up to 7
+            days prior to travel.</p>
+
+          <h5 class="fw-bold text-midnight-navy mt-4 mb-2"><i
+              class="fas fa-envelope-open-text text-ocean-teal me-2"></i> 4. Contact & Support</h5>
+          <p class="mb-0">For privacy concerns or inquiries regarding your stored booking records, please reach out to
+            our privacy officer at <a href="mailto:privacy@dineshtravel.com"
+              class="text-ocean-teal fw-bold">privacy@dineshtravel.com</a>.</p>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-brand px-4" data-bs-dismiss="modal">I Understand & Agree</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
